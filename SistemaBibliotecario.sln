@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotecaFrontEnd", "BibliotecaFrontEnd\BibliotecaFrontEnd.csproj", "{61373487-C6C2-49BB-879E-2E254AF5005B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotecaBackEnd", "BibliotecaBackEnd\BibliotecaBackEnd.csproj", "{58755583-E691-4CD9-94C1-9D1D09338352}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{61373487-C6C2-49BB-879E-2E254AF5005B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61373487-C6C2-49BB-879E-2E254AF5005B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61373487-C6C2-49BB-879E-2E254AF5005B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61373487-C6C2-49BB-879E-2E254AF5005B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58755583-E691-4CD9-94C1-9D1D09338352}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58755583-E691-4CD9-94C1-9D1D09338352}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58755583-E691-4CD9-94C1-9D1D09338352}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58755583-E691-4CD9-94C1-9D1D09338352}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
