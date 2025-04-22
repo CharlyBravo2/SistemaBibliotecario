@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BibliotecaBackEnd.Objetos;
+using BibliotecaFrontEnd.Servicios;
 
 namespace BibliotecaFrontEnd.GUI
 {
@@ -36,9 +37,8 @@ namespace BibliotecaFrontEnd.GUI
                     return;
                 }
 
-                var libros = Program.Datos.Libros
-                    .OrderBy(l => l.Titulo)
-                    .ToList();
+                var libros = BibliotecaService.ObtenerLibros();
+          
 
                 foreach (var libro in libros)
                 {
@@ -180,5 +180,7 @@ namespace BibliotecaFrontEnd.GUI
         {
 
         }
+
+
     }
 }

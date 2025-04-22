@@ -20,7 +20,7 @@ namespace BibliotecaFrontEnd.GUI
             InitializeComponent();
         }
 
-        private void frmPrestarLibros_Load(object sender, EventArgs e)
+        public void frmPrestarLibros_Load(object sender, EventArgs e)
         {
             CargarUsuarios();
             CargarLibrosDisponibles();
@@ -28,7 +28,7 @@ namespace BibliotecaFrontEnd.GUI
             dtpFechaDevolucion.Value = DateTime.Today.AddDays(15);
         }
 
-        private void CargarUsuarios()
+        public void CargarUsuarios()
         {
             try
             {

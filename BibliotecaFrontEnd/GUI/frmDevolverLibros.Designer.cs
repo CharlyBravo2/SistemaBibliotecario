@@ -261,6 +261,7 @@ namespace BibliotecaFrontEnd.GUI
             this.gbUsuario.TabIndex = 1;
             this.gbUsuario.TabStop = false;
             this.gbUsuario.Text = "Información del Usuario";
+            this.gbUsuario.Enter += new System.EventHandler(this.gbUsuario_Enter);
             // 
             // txtEstadoUsuario
             // 

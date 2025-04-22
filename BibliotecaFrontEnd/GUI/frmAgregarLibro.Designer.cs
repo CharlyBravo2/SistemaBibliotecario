@@ -595,6 +595,7 @@
             this.Name = "frmAgregarLibro";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Agregar Nuevo Libro";
+            this.Load += new System.EventHandler(this.frmAgregarLibro_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();

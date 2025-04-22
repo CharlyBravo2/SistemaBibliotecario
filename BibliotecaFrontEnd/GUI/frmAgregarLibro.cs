@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BibliotecaBackEnd.Objetos;
+using BibliotecaFrontEnd.Servicios;
 
 namespace BibliotecaFrontEnd.GUI
 {
@@ -44,8 +45,7 @@ namespace BibliotecaFrontEnd.GUI
                 );
 
                 // Agregar a la lista
-                Program.Datos.Libros.Add(nuevoLibro);
-                Program.GuardarDatos();
+                BibliotecaService.EnviarGenerico(nuevoLibro, "Libro");
 
                 MessageBox.Show("Libro agregado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Close();
@@ -62,6 +62,11 @@ namespace BibliotecaFrontEnd.GUI
         }
 
         private void tabPage1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void frmAgregarLibro_Load(object sender, EventArgs e)
         {
 
         }

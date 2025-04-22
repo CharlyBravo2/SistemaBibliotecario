@@ -6,12 +6,19 @@ using System.Windows.Forms;
 using BibliotecaBackEnd.Objetos;
 using BibliotecaFrontEnd.GUI;
 using Newtonsoft.Json;
+using BibliotecaBackEnd;
 namespace BibliotecaFrontEnd
 {
-    static class Program
+    public class Program
     {
         public static DatosBiblioteca Datos { get; set; }
         public const string ARCHIVO_DATOS = "datos_biblioteca.json";
+        public static List<Libro> libros = new List<Libro>();
+        public static List<Autor> autores = new List<Autor>();
+        public static List<Editorial> editoriales = new List<Editorial>();
+        public static List<GeneroLiterario> generos = new List<GeneroLiterario>();
+        public static List<Usuario> usuarios = new List<Usuario>();
+        public static List<Prestamo> prestamos = new List<Prestamo>();
         /// <summary>
         /// Punto de entrada principal para la aplicación.
         /// </summary>
@@ -28,7 +35,7 @@ namespace BibliotecaFrontEnd
 
             Application.Run(new frmPrincipal());
         }
-        private static void CargarDatos()
+        public static void CargarDatos()
         {
             try
             {
@@ -51,7 +58,7 @@ namespace BibliotecaFrontEnd
             }
         }
 
-        private static void ReconstruirRelaciones()
+        public static void ReconstruirRelaciones()
         {
             foreach (var prestamo in Datos.Prestamos)
             {

@@ -25,16 +25,25 @@ namespace BibliotecaFrontEnd.GUI
             txtBusquedaLibro.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             txtBusquedaLibro.AutoCompleteSource = AutoCompleteSource.CustomSource;
             var librosSource = new AutoCompleteStringCollection();
-            librosSource.AddRange(Program.Datos.Libros.Select(l => l.Titulo).ToArray());
-            librosSource.AddRange(Program.Datos.Libros.Select(l => l.ISBN).ToArray());
-            txtBusquedaLibro.AutoCompleteCustomSource = librosSource;
 
-            // Configurar el autocompletado para la búsqueda de usuarios
-            txtIdentificacionUsuario.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            txtIdentificacionUsuario.AutoCompleteSource = AutoCompleteSource.CustomSource;
-            var usuariosSource = new AutoCompleteStringCollection();
-            usuariosSource.AddRange(Program.Datos.Usuarios.Select(u => u.Identificacion).ToArray());
-            txtIdentificacionUsuario.AutoCompleteCustomSource = usuariosSource;
+            Program.Datos.Libros = new List<Libro>();
+            librosSource.AddRange(Program.Datos.Libros.Select(l => l.Titulo).ToArray());
+
+            if (Program.Datos?.Libros != null)
+            {
+                librosSource.AddRange(Program.Datos.Libros.Where(l => l != null).Select(l => l.Titulo).ToArray());
+
+                Program.Datos.Libros = new List<Libro>();
+                librosSource.AddRange(Program.Datos.Libros.Select(l => l.ISBN).ToArray());
+                txtBusquedaLibro.AutoCompleteCustomSource = librosSource;
+
+                // Configurar el autocompletado para la búsqueda de usuarios
+                txtIdentificacionUsuario.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                txtIdentificacionUsuario.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                var usuariosSource = new AutoCompleteStringCollection();
+                usuariosSource.AddRange(Program.Datos.Usuarios.Select(u => u.Identificacion).ToArray());
+                txtIdentificacionUsuario.AutoCompleteCustomSource = usuariosSource;
+            }
         }
 
         private void btnBuscarLibro_Click(object sender, EventArgs e)
@@ -237,6 +246,11 @@ namespace BibliotecaFrontEnd.GUI
                     MostrarInformacionLibro(libro);
                 }
             }
+        }
+
+        private void gbUsuario_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

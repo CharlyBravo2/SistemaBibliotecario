@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using BibliotecaBackEnd.Objetos;
 using static System.Console;
 using Newtonsoft.Json;
+using System.Net;
+using System.Net.Sockets;
 namespace BibliotecaBackEnd
 
 {
@@ -21,7 +23,9 @@ namespace BibliotecaBackEnd
         public static List<Prestamo> prestamos = new List<Prestamo>();
         static void Main(string[] args)
         {
+            Task.Run(() => SocketServer.IniciarServidor());
             CargarDatosIniciales();
+
 
             while (true)
             {
@@ -112,7 +116,7 @@ namespace BibliotecaBackEnd
             Write("Seleccione una opción: ");
         }
 
-        private static void CargarDatosIniciales()
+        public static void CargarDatosIniciales()
         {
             datos = JsonDataManager.CargarDatos<DatosBiblioteca>(ARCHIVO_DATOS) ?? new DatosBiblioteca();
 
@@ -127,7 +131,7 @@ namespace BibliotecaBackEnd
             ReconstruirRelaciones();
         }
 
-        private static void ReconstruirRelaciones()
+        public static void ReconstruirRelaciones()
         {
 
             foreach (var prestamo in prestamos)
@@ -154,7 +158,7 @@ namespace BibliotecaBackEnd
             }
         }
 
-        private static void GuardarDatos()
+        public static void GuardarDatos()
         {
             datos.Libros = libros;
             datos.Autores = autores;
@@ -814,6 +818,8 @@ namespace BibliotecaBackEnd
             ReadKey();
             Clear();
         }
+
+
     }
     
 }

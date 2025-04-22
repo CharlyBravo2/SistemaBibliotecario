@@ -54,7 +54,7 @@
             this.menuConfiguracion});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(866, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -70,13 +70,13 @@
             // itemAgregarLibro
             // 
             this.itemAgregarLibro.Name = "itemAgregarLibro";
-            this.itemAgregarLibro.Size = new System.Drawing.Size(180, 22);
+            this.itemAgregarLibro.Size = new System.Drawing.Size(146, 22);
             this.itemAgregarLibro.Text = "Agregar Libro";
             // 
             // itemListarLibros
             // 
             this.itemListarLibros.Name = "itemListarLibros";
-            this.itemListarLibros.Size = new System.Drawing.Size(180, 22);
+            this.itemListarLibros.Size = new System.Drawing.Size(146, 22);
             this.itemListarLibros.Text = "Listar Libros";
             // 
             // menuUsuarios
@@ -90,7 +90,7 @@
             // itemAgregarUsuario
             // 
             this.itemAgregarUsuario.Name = "itemAgregarUsuario";
-            this.itemAgregarUsuario.Size = new System.Drawing.Size(180, 22);
+            this.itemAgregarUsuario.Size = new System.Drawing.Size(159, 22);
             this.itemAgregarUsuario.Text = "Agregar Usuario";
             // 
             // menuPrestamos
@@ -107,19 +107,19 @@
             // itemPrestarLibros
             // 
             this.itemPrestarLibros.Name = "itemPrestarLibros";
-            this.itemPrestarLibros.Size = new System.Drawing.Size(180, 22);
+            this.itemPrestarLibros.Size = new System.Drawing.Size(160, 22);
             this.itemPrestarLibros.Text = "Prestar Libros";
             // 
             // itemDevolverLibros
             // 
             this.itemDevolverLibros.Name = "itemDevolverLibros";
-            this.itemDevolverLibros.Size = new System.Drawing.Size(180, 22);
+            this.itemDevolverLibros.Size = new System.Drawing.Size(160, 22);
             this.itemDevolverLibros.Text = "Devolver Libros";
             // 
             // itemListarPrestamos
             // 
             this.itemListarPrestamos.Name = "itemListarPrestamos";
-            this.itemListarPrestamos.Size = new System.Drawing.Size(180, 22);
+            this.itemListarPrestamos.Size = new System.Drawing.Size(160, 22);
             this.itemListarPrestamos.Text = "Listar Préstamos";
             // 
             // menuConfiguracion
@@ -134,13 +134,13 @@
             // itemBackup
             // 
             this.itemBackup.Name = "itemBackup";
-            this.itemBackup.Size = new System.Drawing.Size(180, 22);
+            this.itemBackup.Size = new System.Drawing.Size(113, 22);
             this.itemBackup.Text = "Backup";
             // 
             // itemSalir
             // 
             this.itemSalir.Name = "itemSalir";
-            this.itemSalir.Size = new System.Drawing.Size(180, 22);
+            this.itemSalir.Size = new System.Drawing.Size(113, 22);
             this.itemSalir.Text = "Salir";
             // 
             // lblBienvenida
@@ -148,7 +148,7 @@
             this.lblBienvenida.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblBienvenida.AutoSize = true;
             this.lblBienvenida.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBienvenida.Location = new System.Drawing.Point(150, 200);
+            this.lblBienvenida.Location = new System.Drawing.Point(50, 515);
             this.lblBienvenida.Name = "lblBienvenida";
             this.lblBienvenida.Size = new System.Drawing.Size(510, 37);
             this.lblBienvenida.TabIndex = 1;
@@ -158,7 +158,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(866, 561);
             this.Controls.Add(this.lblBienvenida);
             this.Controls.Add(this.menuStrip1);
             this.IsMdiContainer = true;

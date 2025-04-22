@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BibliotecaBackEnd.Objetos;
+using BibliotecaFrontEnd.Servicios;
 
 namespace BibliotecaFrontEnd.GUI
 {
@@ -45,8 +46,7 @@ namespace BibliotecaFrontEnd.GUI
 
                 Usuario nuevoUsuario = CrearUsuario();
 
-                Program.Datos.Usuarios.Add(nuevoUsuario);
-                Program.GuardarDatos();
+                BibliotecaService.EnviarGenerico(nuevoUsuario, "Usuario");
 
                 MessageBox.Show("Usuario agregado correctamente.", "Éxito",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -77,14 +77,7 @@ namespace BibliotecaFrontEnd.GUI
                 return false;
             }
 
-            // Verificar si la identificación ya existe
-            if (Program.Datos.Usuarios.Exists(u => u.Identificacion == txtIdentificacion.Text))
-            {
-                MessageBox.Show("Ya existe un usuario con esta identificación.", "Validación",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtIdentificacion.Focus();
-                return false;
-            }
+           
 
             if (rbEstudiante.Checked)
             {
