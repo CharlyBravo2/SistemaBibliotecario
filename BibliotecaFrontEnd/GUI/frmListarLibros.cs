@@ -14,58 +14,170 @@ namespace BibliotecaFrontEnd.GUI
 {
     public partial class frmListarLibros : Form
     {
-        private DataGridView dataGridViewLibros; // Add this declaration  
-
         public frmListarLibros()
         {
             InitializeComponent();
-            InitializeCustomComponents(); // Initialize the DataGridView  
-        }
-
-        private void InitializeCustomComponents()
-        {
-            // Initialize the DataGridView  
-            dataGridViewLibros = new DataGridView
-            {
-                Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                AllowUserToAddRows = false,
-                ReadOnly = true
-            };
-
-            // Add the DataGridView to the form's controls  
-            Controls.Add(dataGridViewLibros);
         }
 
         private void frmListarLibros_Load(object sender, EventArgs e)
         {
+            CargarLibros();
+            ConfigurarColumnas();
+        }
+
+        private void CargarLibros()
+        {
             try
             {
-                // Llama al backend por sockets y obtén la lista  
-                var listaLibros = BibliotecaService.ObtenerLibros();
-                dataGridViewLibros.DataSource = listaLibros;
+                lvLibros.Items.Clear();
+
+                if (Program.Datos == null || Program.Datos.Libros == null)
+                {
+                    MessageBox.Show("Datos or Libros is not initialized.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var libros = Program.Datos.Libros
+                    .OrderBy(l => l.Titulo)
+                    .ToList();
+
+                foreach (var libro in libros)
+                {
+                    var item = new ListViewItem(libro.Titulo);
+                    item.SubItems.Add(libro.AutorLibro.ObtenerNombreCompleto());
+                    item.SubItems.Add(libro.ISBN);
+                    item.SubItems.Add(libro.AñoPublicacion.ToString());
+                    item.SubItems.Add($"{libro.EjemplaresDisponibles}/{libro.CantidadEjemplares}");
+
+                    if (libro.EjemplaresDisponibles == 0)
+                    {
+                        item.ForeColor = System.Drawing.Color.Red;
+                    }
+
+                    item.Tag = libro;
+
+                    lvLibros.Items.Add(item);
+                }
+
+                lblTotalLibros.Text = $"Total de libros: {libros.Count}";
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al obtener libros: {ex.Message}",
-                                "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar los libros: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void InitializeComponent()
+        private void ConfigurarColumnas()
         {
-            this.SuspendLayout();
-            // 
-            // frmListarLibros
-            // 
-            this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Name = "frmListarLibros";
-            this.Load += new System.EventHandler(this.frmListarLibros_Load_1);
-            this.ResumeLayout(false);
-
+            foreach (ColumnHeader col in lvLibros.Columns)
+            {
+                col.Width = -2; // Autoajustar al contenido
+            }
         }
 
-        private void frmListarLibros_Load_1(object sender, EventArgs e)
+        private void btnActualizar_Click(object sender, EventArgs e)
+        {
+            CargarLibros();
+        }
+
+        private void btnVerDetalles_Click(object sender, EventArgs e)
+        {
+            if (lvLibros.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Seleccione un libro para ver sus detalles.", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var libroSeleccionado = (Libro)lvLibros.SelectedItems[0].Tag;
+            MostrarDetallesLibro(libroSeleccionado);
+        }
+
+        private void MostrarDetallesLibro(Libro libro)
+        {
+            var detalles = $"Título: {libro.Titulo}\n" +
+                          $"ISBN: {libro.ISBN}\n" +
+                          $"Año de publicación: {libro.AñoPublicacion}\n" +
+                          $"Ejemplares: {libro.EjemplaresDisponibles}/{libro.CantidadEjemplares} disponibles\n\n" +
+                          $"Autor: {libro.AutorLibro.ObtenerNombreCompleto()}\n" +
+                          $"Nacionalidad: {libro.AutorLibro.Nacionalidad}\n" +
+                          $"Año nacimiento: {libro.AutorLibro.AñoNacimiento}\n\n" +
+                          $"Editorial: {libro.EditorialLibro.Nombre}\n" +
+                          $"País: {libro.EditorialLibro.Pais}\n" +
+                          $"Teléfono: {libro.EditorialLibro.Telefono}\n\n" +
+                          $"Género: {libro.Genero.Nombre}\n" +
+                          $"Tema: {libro.Genero.Tema}";
+
+            MessageBox.Show(detalles, "Detalles del Libro",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            BuscarLibros();
+        }
+
+        private void txtBusqueda_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                BuscarLibros();
+                e.Handled = true;
+            }
+        }
+
+        private void BuscarLibros()
+        {
+            if (Program.Datos == null || Program.Datos.Libros == null)
+            {
+                MessageBox.Show("Error: Datos or Libros is not initialized.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtBusqueda.Text))
+            {
+                CargarLibros();
+                return;
+            }
+
+            var termino = txtBusqueda.Text.ToLower();
+
+            var librosFiltrados = Program.Datos.Libros
+                .Where(l => l.Titulo.ToLower().Contains(termino) ||
+                           l.ISBN.ToLower().Contains(termino) ||
+                           l.AutorLibro.ObtenerNombreCompleto().ToLower().Contains(termino))
+                .OrderBy(l => l.Titulo)
+                .ToList();
+
+            lvLibros.Items.Clear();
+
+            foreach (var libro in librosFiltrados)
+            {
+                var item = new ListViewItem(libro.Titulo);
+                item.SubItems.Add(libro.AutorLibro.ObtenerNombreCompleto());
+                item.SubItems.Add(libro.ISBN);
+                item.SubItems.Add(libro.AñoPublicacion.ToString());
+                item.SubItems.Add($"{libro.EjemplaresDisponibles}/{libro.CantidadEjemplares}");
+
+                if (libro.EjemplaresDisponibles == 0)
+                {
+                    item.ForeColor = System.Drawing.Color.Red;
+                }
+
+                item.Tag = libro;
+                lvLibros.Items.Add(item);
+            }
+
+            lblTotalLibros.Text = $"Libros encontrados: {librosFiltrados.Count}";
+        }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void lvLibros_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
