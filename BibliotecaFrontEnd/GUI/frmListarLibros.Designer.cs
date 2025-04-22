@@ -1,4 +1,6 @@
-﻿namespace BibliotecaFrontEnd.GUI
+﻿using System;
+
+namespace BibliotecaFrontEnd.GUI
 {
     partial class frmListarLibros
     {
@@ -184,6 +186,42 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void btnVerDetalles_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void btnActualizar_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void lvLibros_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void txtBusqueda_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            // Implementación básica para manejar el evento KeyPress.  
+            // Por ejemplo, permitir solo letras, números y teclas de control.  
+            if (!char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            // Cierra el formulario actual.  
+            this.Close();
         }
 
         #endregion
