@@ -51,5 +51,23 @@ namespace BibliotecaFrontEnd.GUI
                                 "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // frmListarLibros
+            // 
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Name = "frmListarLibros";
+            this.Load += new System.EventHandler(this.frmListarLibros_Load_1);
+            this.ResumeLayout(false);
+
+        }
+
+        private void frmListarLibros_Load_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
