@@ -51,14 +51,14 @@ namespace BibliotecaFrontEnd.Servicios
             return JsonConvert.DeserializeObject<List<Prestamo>>(respuesta);
         }
 
-        // Método interno
+        
         private static string EnviarYRecibir(string tipo)
         {
             var mensaje = new Mensaje
             {
                 Tipo = tipo,
                 RequiereRespuesta = true,
-                Datos = "" // No se necesita para GET
+                Datos = "" 
             };
 
             string json = JsonConvert.SerializeObject(mensaje);

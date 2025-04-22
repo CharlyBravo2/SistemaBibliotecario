@@ -37,27 +37,27 @@ namespace BibliotecaBackEnd
                             case "Libro":
                                 var libro = JsonConvert.DeserializeObject<Libro>(mensaje.Datos);
                                 Program.datos.Libros.Add(libro);
-                                Console.WriteLine("📘 Libro agregado.");
+                                Console.WriteLine(" Libro agregado.");
                                 break;
 
                             case "Usuario":
                                 var usuario = JsonConvert.DeserializeObject<Usuario>(mensaje.Datos);
                                 Program.datos.Usuarios.Add(usuario);
-                                Console.WriteLine("👤 Usuario agregado.");
+                                Console.WriteLine(" Usuario agregado.");
                                 break;
 
                             case "Prestamo":
                                 var prestamo = JsonConvert.DeserializeObject<Prestamo>(mensaje.Datos);
                                 Program.datos.Prestamos.Add(prestamo);
-                                Console.WriteLine("📄 Préstamo registrado.");
+                                Console.WriteLine(" Préstamo registrado.");
                                 break;
 
                             case "Backup":
                                 File.WriteAllText("backup.json", mensaje.Datos);
-                                Console.WriteLine("🗂️ Backup guardado.");
+                                Console.WriteLine("🗂 Backup guardado.");
                                 break;
 
-                            // 🔁 PETICIONES CON RESPUESTA
+                            //  PETICIONES CON RESPUESTA
                             case "GetLibros":
                                 if (mensaje.RequiereRespuesta)
                                 {
