@@ -57,7 +57,7 @@ namespace BibliotecaBackEnd
                                 Console.WriteLine("🗂 Backup guardado.");
                                 break;
 
-                            //  PETICIONES CON RESPUESTA
+                            
                             case "GetLibros":
                                 if (mensaje.RequiereRespuesta)
                                 {

@@ -11,6 +11,6 @@ namespace BibliotecaFrontEnd
         public string Tipo { get; set; }
         public string Datos { get; set; }
 
-        public bool RequiereRespuesta { get; set; } = false; // NUEVO
+        public bool RequiereRespuesta { get; set; } = false; 
     }
 }
