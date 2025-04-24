@@ -19,9 +19,7 @@ namespace BibliotecaFrontEnd
         public static List<GeneroLiterario> generos = new List<GeneroLiterario>();
         public static List<Usuario> usuarios = new List<Usuario>();
         public static List<Prestamo> prestamos = new List<Prestamo>();
-        /// <summary>
-        /// Punto de entrada principal para la aplicación.
-        /// </summary>
+        
 
         [STAThread]
         static void Main()
@@ -29,10 +27,10 @@ namespace BibliotecaFrontEnd
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // 1) Cargar los datos del JSON antes de levantar la UI
+            
             CargarDatos();
 
-            // 2) Iniciar el formulario principal UNA ÚNICA vez
+            
             Application.Run(new GUI.frmPrincipal());
         }
         public static void CargarDatos()
@@ -41,7 +39,7 @@ namespace BibliotecaFrontEnd
             {
                 Datos = JsonDataManager.CargarDatos<DatosBiblioteca>(ARCHIVO_DATOS) ?? new DatosBiblioteca();
 
-                // Inicializar listas si son null
+                
                 Datos.Libros = Datos.Libros ?? new List<Libro>();
                 Datos.Autores = Datos.Autores ?? new List<Autor>();
                 Datos.Editoriales = Datos.Editoriales ?? new List<Editorial>();

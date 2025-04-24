@@ -112,7 +112,7 @@ namespace BibliotecaFrontEnd.GUI
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                usuarioActual = usuario; // ✅ Guardar el usuario actual
+                usuarioActual = usuario; 
                 MostrarInformacionUsuario(usuario);
                 CargarPrestamosUsuario(usuario);
             }
@@ -135,8 +135,9 @@ namespace BibliotecaFrontEnd.GUI
         {
             dgvPrestamos.Rows.Clear();
 
-            var prestamosActivos = usuario.Prestamos
-                .Where(p => !p.Devuelto)
+            var todosPrestamos = BibliotecaService.ObtenerPrestamos(); // ✅ Llama al servidor
+            var prestamosActivos = todosPrestamos
+                .Where(p => !p.Devuelto && p.Usuario.Identificacion == usuario.Identificacion)
                 .OrderBy(p => p.FechaDevolucion);
 
             foreach (var prestamo in prestamosActivos)
@@ -150,7 +151,7 @@ namespace BibliotecaFrontEnd.GUI
                 prestamo.CantidadLibrosPrestados
             );
 
-                dgvPrestamos.Rows[rowIndex].Tag = prestamo; // ✅ ASIGNACIÓN IMPORTANTE
+                dgvPrestamos.Rows[rowIndex].Tag = prestamo; 
             }
 
             lblTotalPrestamos.Text = $"Total préstamos activos: {prestamosActivos.Count()}";
@@ -170,7 +171,7 @@ namespace BibliotecaFrontEnd.GUI
             {
                 BibliotecaService.DevolverPrestamo(prestamo);
                 MessageBox.Show("Libro devuelto correctamente.");
-                CargarPrestamosUsuario(usuarioActual); // ✅ Esto sí funcion
+                CargarPrestamosUsuario(usuarioActual); 
             }
             catch (Exception ex)
             {
@@ -183,23 +184,36 @@ namespace BibliotecaFrontEnd.GUI
             this.Close();
         }
 
-        private void dgvPrestamos_SelectionChanged(object sender, EventArgs e)
+        private async void dgvPrestamos_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvPrestamos.SelectedRows.Count > 0)
             {
                 string isbn = dgvPrestamos.SelectedRows[0].Cells["ISBN"].Value.ToString();
-                var libros = BibliotecaService.ObtenerLibros();
-                var libro = libros.FirstOrDefault(l => l.ISBN == isbn);
 
-                if (libro != null)
+                try
                 {
-                    txtBusquedaLibro.Text = libro.Titulo;
-                    MostrarInformacionLibro(libro);
+                    var libros = await Task.Run(() => BibliotecaService.ObtenerLibros());
+                    var libro = libros.FirstOrDefault(l => l.ISBN == isbn);
+
+                    if (libro != null)
+                    {
+                        txtBusquedaLibro.Text = libro.Titulo;
+                        MostrarInformacionLibro(libro);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al obtener libro desde servidor: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
         private void gbUsuario_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void frmDevolverLibros_Load(object sender, EventArgs e)
         {
 
         }

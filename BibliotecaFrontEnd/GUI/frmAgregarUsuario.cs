@@ -22,7 +22,7 @@ namespace BibliotecaFrontEnd.GUI
 
         private void ConfigurarControlesEspecificos()
         {
-            // Configurar controles específicos según el tipo de usuario
+            
             rbEstudiante.CheckedChanged += (s, e) => {
                 pnlEstudiante.Visible = rbEstudiante.Checked;
                 pnlProfesor.Visible = !rbEstudiante.Checked;
@@ -33,7 +33,7 @@ namespace BibliotecaFrontEnd.GUI
                 pnlEstudiante.Visible = !rbProfesor.Checked;
             };
 
-            // Establecer estudiante como opción predeterminada
+            
             rbEstudiante.Checked = true;
         }
 
@@ -41,7 +41,9 @@ namespace BibliotecaFrontEnd.GUI
         {
             try
             {
-                if (!ValidarDatos())
+                var usuariosExistentes = BibliotecaService.ObtenerUsuarios(); 
+
+                if (!ValidarDatos(usuariosExistentes)) 
                     return;
 
                 Usuario nuevoUsuario = CrearUsuario();
@@ -59,7 +61,7 @@ namespace BibliotecaFrontEnd.GUI
             }
         }
 
-        private bool ValidarDatos()
+        private bool ValidarDatos(List<Usuario> usuariosExistentes)
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
             {
@@ -77,7 +79,13 @@ namespace BibliotecaFrontEnd.GUI
                 return false;
             }
 
-           
+            if (usuariosExistentes.Any(u => u.Identificacion == txtIdentificacion.Text.Trim()))
+            {
+                MessageBox.Show("Ya existe un usuario con esa identificación.", "Validación",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtIdentificacion.Focus();
+                return false;
+            }
 
             if (rbEstudiante.Checked)
             {
@@ -144,7 +152,7 @@ namespace BibliotecaFrontEnd.GUI
                     txtGradoAcademico.Text.Trim()
                 );
 
-                // Agregar cursos si existen
+                
                 string[] cursos = txtCursos.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var curso in cursos)
                 {
@@ -162,7 +170,7 @@ namespace BibliotecaFrontEnd.GUI
 
         private void txtTelefono_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Permitir solo números y teclas de control
+            
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true;

@@ -26,7 +26,7 @@ namespace BibliotecaFrontEnd.Servicios
 
             string json = JsonConvert.SerializeObject(mensaje);
 
-            // Aquí la magia: usamos TcpClient y cerramos explícitamente luego
+            
             using (TcpClient cliente = new TcpClient())
             {
                 cliente.Connect(IP_SERVIDOR, PUERTO);
@@ -37,9 +37,9 @@ namespace BibliotecaFrontEnd.Servicios
                 {
                     writer.Write(json);
                     writer.Flush();
-                    cliente.Client.Shutdown(SocketShutdown.Send); // 👈 CLAVE: indica fin de escritura
+                    cliente.Client.Shutdown(SocketShutdown.Send); 
 
-                    string respJson = reader.ReadToEnd(); // ahora sí puede terminar
+                    string respJson = reader.ReadToEnd(); 
                     return JsonConvert.DeserializeObject<RespuestaServidor>(respJson);
                 }
             }

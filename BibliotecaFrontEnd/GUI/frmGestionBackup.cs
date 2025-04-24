@@ -26,11 +26,11 @@ namespace BibliotecaFrontEnd.GUI
 
         private void ConfigurarControles()
         {
-            // Configurar el TextBox para mostrar la ruta actual
+            
             txtRutaActual.Text = Program.ARCHIVO_DATOS;
             txtRutaActual.ReadOnly = true;
 
-            // Configurar el formato de fecha para los backups
+            
             dtpFechaBackup.Format = DateTimePickerFormat.Custom;
             dtpFechaBackup.CustomFormat = "yyyyMMdd_HHmmss";
         }
@@ -74,7 +74,7 @@ namespace BibliotecaFrontEnd.GUI
 
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
-                        // Confirmar con el usuario antes de sobrescribir datos
+                        
                         var confirmacion = MessageBox.Show(
                             "¿Está seguro que desea importar esta copia de seguridad? Todos los datos actuales serán reemplazados.",
                             "Confirmar Importación",
@@ -112,7 +112,7 @@ namespace BibliotecaFrontEnd.GUI
         {
             try
             {
-                // Confirmar con el usuario antes de restaurar el sistema
+                
                 var confirmacion = MessageBox.Show(
                     "¿Está seguro que desea restaurar el sistema a los valores predeterminados? Todos los datos actuales se perderán.",
                     "Confirmar Restauración",

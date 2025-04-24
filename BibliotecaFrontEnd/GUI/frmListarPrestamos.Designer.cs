@@ -1,4 +1,6 @@
-﻿namespace BibliotecaFrontEnd.GUI
+﻿using System.Windows.Forms;
+
+namespace BibliotecaFrontEnd.GUI
 {
     partial class frmListarPrestamos
     {
@@ -28,14 +30,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gbFiltros = new System.Windows.Forms.GroupBox();
+            this.pnlUsuario = new System.Windows.Forms.Panel();
             this.pnlLibro = new System.Windows.Forms.Panel();
             this.cmbLibro = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.pnlUsuario = new System.Windows.Forms.Panel();
             this.cmbUsuario = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.pnlFechas = new System.Windows.Forms.Panel();
@@ -53,8 +55,8 @@
             this.btnImprimir = new System.Windows.Forms.Button();
             this.btnCerrar = new System.Windows.Forms.Button();
             this.gbFiltros.SuspendLayout();
-            this.pnlLibro.SuspendLayout();
             this.pnlUsuario.SuspendLayout();
+            this.pnlLibro.SuspendLayout();
             this.pnlFechas.SuspendLayout();
             this.gbResultados.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPrestamos)).BeginInit();
@@ -76,13 +78,23 @@
             this.gbFiltros.Text = "Filtros de Búsqueda";
             this.gbFiltros.Enter += new System.EventHandler(this.gbFiltros_Enter);
             // 
+            // pnlUsuario
+            // 
+            this.pnlUsuario.Controls.Add(this.cmbUsuario);
+            this.pnlUsuario.Controls.Add(this.label4);
+            this.pnlUsuario.Location = new System.Drawing.Point(287, 80);
+            this.pnlUsuario.Name = "pnlUsuario";
+            this.pnlUsuario.Size = new System.Drawing.Size(343, 50);
+            this.pnlUsuario.TabIndex = 4;
+            this.pnlUsuario.Visible = false;
+            // 
             // pnlLibro
             // 
             this.pnlLibro.Controls.Add(this.cmbLibro);
             this.pnlLibro.Controls.Add(this.label5);
-            this.pnlLibro.Location = new System.Drawing.Point(300, 80);
+            this.pnlLibro.Location = new System.Drawing.Point(577, 80);
             this.pnlLibro.Name = "pnlLibro";
-            this.pnlLibro.Size = new System.Drawing.Size(300, 50);
+            this.pnlLibro.Size = new System.Drawing.Size(263, 50);
             this.pnlLibro.TabIndex = 5;
             this.pnlLibro.Visible = false;
             // 
@@ -90,7 +102,7 @@
             // 
             this.cmbLibro.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbLibro.FormattingEnabled = true;
-            this.cmbLibro.Location = new System.Drawing.Point(80, 15);
+            this.cmbLibro.Location = new System.Drawing.Point(37, 14);
             this.cmbLibro.Name = "cmbLibro";
             this.cmbLibro.Size = new System.Drawing.Size(200, 21);
             this.cmbLibro.TabIndex = 1;
@@ -103,16 +115,6 @@
             this.label5.Size = new System.Drawing.Size(30, 13);
             this.label5.TabIndex = 0;
             this.label5.Text = "Libro";
-            // 
-            // pnlUsuario
-            // 
-            this.pnlUsuario.Controls.Add(this.cmbUsuario);
-            this.pnlUsuario.Controls.Add(this.label4);
-            this.pnlUsuario.Location = new System.Drawing.Point(300, 80);
-            this.pnlUsuario.Name = "pnlUsuario";
-            this.pnlUsuario.Size = new System.Drawing.Size(300, 50);
-            this.pnlUsuario.TabIndex = 4;
-            this.pnlUsuario.Visible = false;
             // 
             // cmbUsuario
             // 
@@ -140,7 +142,7 @@
             this.pnlFechas.Controls.Add(this.label2);
             this.pnlFechas.Location = new System.Drawing.Point(20, 80);
             this.pnlFechas.Name = "pnlFechas";
-            this.pnlFechas.Size = new System.Drawing.Size(250, 50);
+            this.pnlFechas.Size = new System.Drawing.Size(261, 50);
             this.pnlFechas.TabIndex = 3;
             // 
             // dtpHasta
@@ -148,13 +150,13 @@
             this.dtpHasta.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpHasta.Location = new System.Drawing.Point(170, 15);
             this.dtpHasta.Name = "dtpHasta";
-            this.dtpHasta.Size = new System.Drawing.Size(70, 20);
+            this.dtpHasta.Size = new System.Drawing.Size(81, 20);
             this.dtpHasta.TabIndex = 3;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(130, 18);
+            this.label3.Location = new System.Drawing.Point(136, 18);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(35, 13);
             this.label3.TabIndex = 2;
@@ -165,7 +167,7 @@
             this.dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpDesde.Location = new System.Drawing.Point(50, 15);
             this.dtpDesde.Name = "dtpDesde";
-            this.dtpDesde.Size = new System.Drawing.Size(70, 20);
+            this.dtpDesde.Size = new System.Drawing.Size(80, 20);
             this.dtpDesde.TabIndex = 1;
             // 
             // label2
@@ -204,7 +206,6 @@
             this.btnFiltrar.TabIndex = 0;
             this.btnFiltrar.Text = "Filtrar";
             this.btnFiltrar.UseVisualStyleBackColor = true;
-            this.btnFiltrar.Click += new System.EventHandler(this.btnFiltrar_Click);
             // 
             // gbResultados
             // 
@@ -235,38 +236,38 @@
             this.dgvPrestamos.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvPrestamos.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvPrestamos.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvPrestamos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvPrestamos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvPrestamos.ColumnHeadersHeight = 30;
             this.dgvPrestamos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvPrestamos.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvPrestamos.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvPrestamos.EnableHeadersVisualStyles = false;
             this.dgvPrestamos.GridColor = System.Drawing.SystemColors.ControlLight;
             this.dgvPrestamos.Location = new System.Drawing.Point(20, 30);
             this.dgvPrestamos.MultiSelect = false;
             this.dgvPrestamos.Name = "dgvPrestamos";
             this.dgvPrestamos.ReadOnly = true;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvPrestamos.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvPrestamos.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvPrestamos.RowHeadersVisible = false;
             this.dgvPrestamos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvPrestamos.Size = new System.Drawing.Size(820, 280);
@@ -319,10 +320,10 @@
             this.Text = "Listado de Préstamos";
             this.gbFiltros.ResumeLayout(false);
             this.gbFiltros.PerformLayout();
-            this.pnlLibro.ResumeLayout(false);
-            this.pnlLibro.PerformLayout();
             this.pnlUsuario.ResumeLayout(false);
             this.pnlUsuario.PerformLayout();
+            this.pnlLibro.ResumeLayout(false);
+            this.pnlLibro.PerformLayout();
             this.pnlFechas.ResumeLayout(false);
             this.pnlFechas.PerformLayout();
             this.gbResultados.ResumeLayout(false);

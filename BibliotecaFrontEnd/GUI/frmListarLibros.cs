@@ -31,7 +31,7 @@ namespace BibliotecaFrontEnd.GUI
             {
                 lvLibros.Items.Clear();
 
-                // 🔄 Obtener libros directamente del servidor
+                
                 var libros = BibliotecaService.ObtenerLibros()
                     .OrderBy(l => l.Titulo)
                     .ToList();
@@ -65,7 +65,7 @@ namespace BibliotecaFrontEnd.GUI
         {
             foreach (ColumnHeader col in lvLibros.Columns)
             {
-                col.Width = -2; // Autoajustar al contenido
+                col.Width = -2; 
             }
         }
 

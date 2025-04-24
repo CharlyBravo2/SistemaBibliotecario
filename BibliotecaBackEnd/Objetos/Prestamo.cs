@@ -31,6 +31,21 @@ namespace BibliotecaBackEnd.Objetos
             CantidadLibrosPrestados = cantidadLibros;
         }
 
+        [JsonIgnore]
+        public string TituloLibro => LibroPrestado?.Titulo;
+
+        [JsonIgnore]
+        public string ISBNLibro => LibroPrestado?.ISBN;
+
+        [JsonIgnore]
+        public string NombreUsuario => Usuario != null ? $"{Usuario.Nombre} {Usuario.Apellido}" : "";
+
+        [JsonIgnore]
+        public string IdentificacionUsuario => Usuario?.Identificacion;
+
+        [JsonIgnore]
+        public string Estado => Devuelto ? "Devuelto" : (EstaVencido() ? "Vencido" : "Activo");
+
         public void MostrarInformacion()
         {
             WriteLine($" Libro: {LibroPrestado?.Titulo} (ISBN: {LibroPrestado?.ISBN})");
@@ -64,6 +79,10 @@ namespace BibliotecaBackEnd.Objetos
                 int diasRestantes = (FechaDevolucion - DateTime.Now).Days;
                 return $"Activo ({diasRestantes} días restantes)";
             }
+
         }
+
+       
     }
+
 }

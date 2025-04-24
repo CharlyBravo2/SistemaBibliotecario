@@ -516,6 +516,7 @@ namespace BibliotecaFrontEnd.GUI
             this.Name = "frmDevolverLibros";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Devolver Libro";
+            this.Load += new System.EventHandler(this.frmDevolverLibros_Load);
             this.gbLibro.ResumeLayout(false);
             this.gbLibro.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picEstado)).EndInit();

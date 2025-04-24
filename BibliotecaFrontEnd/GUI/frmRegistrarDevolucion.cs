@@ -19,6 +19,7 @@ namespace BibliotecaFrontEnd.GUI
         public frmRegistrarDevolucion()
         {
             InitializeComponent();
+            this.btnCancelar.Click += (s, e) => this.Close();
             CargarPrestamos();
         }
 
@@ -71,6 +72,11 @@ namespace BibliotecaFrontEnd.GUI
                 MessageBox.Show($"Error al devolver: {ex.Message}", "Error",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void dgvPrestamos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

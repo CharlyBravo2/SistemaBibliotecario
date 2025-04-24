@@ -12,36 +12,51 @@ namespace BibliotecaFrontEnd.GUI
 
         private void InitializeComponent()
         {
-            this.dgvPrestamos = new DataGridView();
-            this.btnDevolver = new Button();
-            this.btnCancelar = new Button();
-            ((ISupportInitialize)(this.dgvPrestamos)).BeginInit();
+            this.dgvPrestamos = new System.Windows.Forms.DataGridView();
+            this.btnDevolver = new System.Windows.Forms.Button();
+            this.btnCancelar = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPrestamos)).BeginInit();
             this.SuspendLayout();
             // 
             // dgvPrestamos
-            this.dgvPrestamos.Location = new Point(20, 20);
-            this.dgvPrestamos.Size = new Size(500, 300);
-            this.dgvPrestamos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            // 
+            this.dgvPrestamos.Location = new System.Drawing.Point(20, 20);
             this.dgvPrestamos.MultiSelect = false;
+            this.dgvPrestamos.Name = "dgvPrestamos";
             this.dgvPrestamos.ReadOnly = true;
+            this.dgvPrestamos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvPrestamos.Size = new System.Drawing.Size(500, 300);
+            this.dgvPrestamos.TabIndex = 0;
+            this.dgvPrestamos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPrestamos_CellContentClick);
             // 
             // btnDevolver
+            // 
+            this.btnDevolver.Location = new System.Drawing.Point(150, 340);
+            this.btnDevolver.Name = "btnDevolver";
+            this.btnDevolver.Size = new System.Drawing.Size(75, 23);
+            this.btnDevolver.TabIndex = 1;
             this.btnDevolver.Text = "Devolver";
-            this.btnDevolver.Location = new Point(150, 340);
-            this.btnDevolver.Click += btnDevolver_Click;
             // 
             // btnCancelar
+            // 
+            this.btnCancelar.Location = new System.Drawing.Point(300, 340);
+            this.btnCancelar.Name = "btnCancelar";
+            this.btnCancelar.Size = new System.Drawing.Size(75, 23);
+            this.btnCancelar.TabIndex = 2;
             this.btnCancelar.Text = "Cancelar";
-            this.btnCancelar.Location = new Point(300, 340);
-            this.btnCancelar.Click += (s, e) => this.Close();
             // 
             // frmRegistrarDevolucion
-            this.ClientSize = new Size(540, 380);
-            this.Controls.AddRange(new Control[] { dgvPrestamos, btnDevolver, btnCancelar });
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            // 
+            this.ClientSize = new System.Drawing.Size(540, 380);
+            this.Controls.Add(this.dgvPrestamos);
+            this.Controls.Add(this.btnDevolver);
+            this.Controls.Add(this.btnCancelar);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Name = "frmRegistrarDevolucion";
             this.Text = "Registrar Devolución";
-            ((ISupportInitialize)(this.dgvPrestamos)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPrestamos)).EndInit();
             this.ResumeLayout(false);
+
         }
     }
 }

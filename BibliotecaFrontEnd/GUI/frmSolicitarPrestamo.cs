@@ -20,6 +20,7 @@ namespace BibliotecaFrontEnd.GUI
         public frmSolicitarPrestamo()
         {
             InitializeComponent();
+            this.btnCancelar.Click += (s, e) => this.Close();
             CargarDatos();
         }
 
@@ -84,6 +85,11 @@ namespace BibliotecaFrontEnd.GUI
             MessageBox.Show("Préstamo(s) registrado(s) con éxito.", "Éxito",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.Close();
+        }
+
+        private void frmSolicitarPrestamo_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

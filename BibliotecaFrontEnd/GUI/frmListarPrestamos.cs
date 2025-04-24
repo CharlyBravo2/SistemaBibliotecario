@@ -16,19 +16,13 @@ namespace BibliotecaFrontEnd.GUI
         public frmListarPrestamos()
         {
             InitializeComponent();
+            btnFiltrar.Click += btnFiltrar_Click;
+            this.cmbTipoFiltro.SelectedIndexChanged += new System.EventHandler(this.cmbTipoFiltro_SelectedIndexChanged);
             ConfigurarDataGridView();
             CargarFiltros();
         }
 
-        private void ConfigurarDataGridView()
-        {
-            dgvPrestamos.AutoGenerateColumns = false;
-            dgvPrestamos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvPrestamos.MultiSelect = false;
-            dgvPrestamos.ReadOnly = true;
-            dgvPrestamos.AllowUserToAddRows = false;
-            dgvPrestamos.AllowUserToDeleteRows = false;
-        }
+       
 
         private void CargarFiltros()
         {
@@ -73,63 +67,64 @@ namespace BibliotecaFrontEnd.GUI
             }
         }
 
-        private void CargarPrestamos()
+        private async void CargarPrestamos()
         {
-            IEnumerable<Prestamo> prestamos = BibliotecaService.ObtenerPrestamos();
-
-            switch (cmbTipoFiltro.SelectedIndex)
+            try
             {
-                case 0: // Todos
-                    break;
-                case 1: // Activos
-                    prestamos = prestamos.Where(p => !p.Devuelto);
-                    break;
-                case 2: // Vencidos
-                    prestamos = prestamos.Where(p => p.EstaVencido() && !p.Devuelto);
-                    break;
-                case 3: // Por Usuario
-                    if (cmbUsuario.SelectedValue == null)
-                    {
-                        MessageBox.Show("Seleccione un usuario para filtrar.", "Validación",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
+                var prestamos = await Task.Run(() => BibliotecaService.ObtenerPrestamos());
+
+                // Aplicar filtros
+                switch (cmbTipoFiltro.SelectedIndex)
+                {
+                    case 1: // Activos
+                        prestamos = prestamos.Where(p => !p.Devuelto).ToList();
+                        break;
+                    case 2: // Vencidos
+                        prestamos = prestamos.Where(p => p.EstaVencido() && !p.Devuelto).ToList();
+                        break;
+                    case 3: // Por Usuario
+                        if (cmbUsuario.SelectedValue == null)
+                        {
+                            MessageBox.Show("Seleccione un usuario para filtrar.", "Validación",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+                        prestamos = prestamos.Where(p => p.Usuario.Identificacion == cmbUsuario.SelectedValue.ToString()).ToList();
+                        break;
+                    case 4: // Por Libro
+                        if (cmbLibro.SelectedValue == null)
+                        {
+                            MessageBox.Show("Seleccione un libro para filtrar.", "Validación",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+                        prestamos = prestamos.Where(p => p.LibroPrestado.ISBN == cmbLibro.SelectedValue.ToString()).ToList();
+                        break;
+                }
+
+                // Filtrar por fechas
+                if (dtpDesde.Checked && dtpHasta.Checked)
+                {
                     prestamos = prestamos.Where(p =>
-                        p.Usuario.Identificacion == cmbUsuario.SelectedValue.ToString());
-                    break;
-                case 4: // Por Libro
-                    if (cmbLibro.SelectedValue == null)
-                    {
-                        MessageBox.Show("Seleccione un libro para filtrar.", "Validación",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                    prestamos = prestamos.Where(p =>
-                        p.LibroPrestado.ISBN == cmbLibro.SelectedValue.ToString());
-                    break;
-            }
+                        p.FechaPrestamo >= dtpDesde.Value &&
+                        p.FechaPrestamo <= dtpHasta.Value).ToList();
+                }
+                else if (dtpDesde.Checked)
+                {
+                    prestamos = prestamos.Where(p => p.FechaPrestamo >= dtpDesde.Value).ToList();
+                }
+                else if (dtpHasta.Checked)
+                {
+                    prestamos = prestamos.Where(p => p.FechaPrestamo <= dtpHasta.Value).ToList();
+                }
 
-            // Aplicar filtro de fechas si están seleccionadas
-            if (dtpDesde.Checked && dtpHasta.Checked)
-            {
-                prestamos = prestamos.Where(p =>
-                    p.FechaPrestamo >= dtpDesde.Value &&
-                    p.FechaPrestamo <= dtpHasta.Value);
+                dgvPrestamos.DataSource = prestamos.OrderByDescending(p => p.FechaPrestamo).ToList();
+                lblTotal.Text = $"Total préstamos: {prestamos.Count}";
             }
-            else if (dtpDesde.Checked)
+            catch (Exception ex)
             {
-                prestamos = prestamos.Where(p => p.FechaPrestamo >= dtpDesde.Value);
+                MessageBox.Show($"Error al cargar préstamos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (dtpHasta.Checked)
-            {
-                prestamos = prestamos.Where(p => p.FechaPrestamo <= dtpHasta.Value);
-            }
-
-            // Ordenar por fecha de préstamo descendente
-            prestamos = prestamos.OrderByDescending(p => p.FechaPrestamo);
-
-            dgvPrestamos.DataSource = prestamos.ToList();
-            lblTotal.Text = $"Total préstamos: {prestamos.Count()}";
         }
 
         private void cmbTipoFiltro_SelectedIndexChanged(object sender, EventArgs e)
@@ -205,6 +200,69 @@ namespace BibliotecaFrontEnd.GUI
         private void gbFiltros_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void ConfigurarDataGridView()
+        {
+            dgvPrestamos.Columns.Clear(); // Limpia si ya hay columnas
+
+            dgvPrestamos.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Titulo",
+                HeaderText = "Título",
+                DataPropertyName = "TituloLibro"
+            });
+
+            dgvPrestamos.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "ISBN",
+                HeaderText = "ISBN",
+                DataPropertyName = "ISBNLibro"
+            });
+
+            dgvPrestamos.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Usuario",
+                HeaderText = "Usuario",
+                DataPropertyName = "NombreUsuario"
+            });
+
+            dgvPrestamos.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Identificacion",
+                HeaderText = "Identificación",
+                DataPropertyName = "IdentificacionUsuario"
+            });
+
+            dgvPrestamos.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "FechaPrestamo",
+                HeaderText = "Fecha Préstamo",
+                DataPropertyName = "FechaPrestamo",
+                DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy" }
+            });
+
+            dgvPrestamos.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "FechaDevolucion",
+                HeaderText = "Fecha Devolución",
+                DataPropertyName = "FechaDevolucion",
+                DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy" }
+            });
+
+            dgvPrestamos.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Estado",
+                HeaderText = "Estado",
+                DataPropertyName = "Estado"
+            });
+
+            dgvPrestamos.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Cantidad",
+                HeaderText = "Cantidad",
+                DataPropertyName = "CantidadLibrosPrestados"
+            });
         }
     }
 }

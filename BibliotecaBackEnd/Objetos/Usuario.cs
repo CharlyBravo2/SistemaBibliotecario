@@ -106,5 +106,10 @@ namespace BibliotecaBackEnd.Objetos
         }
 
         public string NombreCompleto => $"{Nombre} {Apellido}";
+
+
+
     }
+
+
 }

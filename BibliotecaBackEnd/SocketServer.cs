@@ -55,9 +55,9 @@ namespace BibliotecaBackEnd
 
                                 case "Prestamo":
                                     var prestamo = JsonConvert.DeserializeObject<Prestamo>(mensaje.Datos);
-                                    // Registrar préstamo en backend  
+                                    
                                     Program.AgregarPrestamoGlobal(prestamo);
-                                    // Ajustar ejemplares y relaciones  
+                                    
                                     var libroP = Program.libros.First(l => l.ISBN == prestamo.LibroPrestado.ISBN);
                                     var usuarioP = Program.usuarios.First(u => u.Identificacion == prestamo.Usuario.Identificacion);
                                     libroP.EjemplaresDisponibles -= prestamo.CantidadLibrosPrestados;
@@ -91,11 +91,9 @@ namespace BibliotecaBackEnd
                                     if (mensaje.RequiereRespuesta)
                                     {
                                         respuesta.Exito = true;
-                                        respuesta.Mensaje = "Préstamos activos enviados correctamente.";
-                                        respuesta.Datos = JsonConvert.SerializeObject(
-                                            Program.datos.Prestamos.Where(p => !p.Devuelto).ToList()
-                                        );
-                                       
+                                        respuesta.Mensaje = "Todos los préstamos enviados correctamente.";
+                                        respuesta.Datos = JsonConvert.SerializeObject(Program.datos.Prestamos);
+
                                     }
                                     break;
 
@@ -137,7 +135,7 @@ namespace BibliotecaBackEnd
                             respuesta.Mensaje = ex.Message;
                         }
 
-                        // Enviar siempre la respuesta  
+                        
                         
                             writer.Write(JsonConvert.SerializeObject(respuesta));
                         
