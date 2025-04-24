@@ -31,69 +31,129 @@ namespace BibliotecaBackEnd
                     {
                         string jsonMensaje = reader.ReadToEnd();
                         Mensaje mensaje = JsonConvert.DeserializeObject<Mensaje>(jsonMensaje);
+                        RespuestaServidor respuesta = new RespuestaServidor();
 
-                        switch (mensaje.Tipo)
+                        try
                         {
-                            case "Libro":
-                                var libro = JsonConvert.DeserializeObject<Libro>(mensaje.Datos);
-                                Program.datos.Libros.Add(libro);
-                                Console.WriteLine(" Libro agregado.");
-                                break;
+                            switch (mensaje.Tipo)
+                            {
+                                case "Libro":
+                                    var libro = JsonConvert.DeserializeObject<Libro>(mensaje.Datos);
+                                    Program.datos.Libros.Add(libro);
+                                    Program.GuardarDatos();
+                                    respuesta.Exito = true;
+                                    respuesta.Mensaje = "Libro agregado correctamente.";
+                                    break;
 
-                            case "Usuario":
-                                var usuario = JsonConvert.DeserializeObject<Usuario>(mensaje.Datos);
-                                Program.datos.Usuarios.Add(usuario);
-                                Console.WriteLine(" Usuario agregado.");
-                                break;
+                                case "Usuario":
+                                    var usuario = JsonConvert.DeserializeObject<Usuario>(mensaje.Datos);
+                                    Program.datos.Usuarios.Add(usuario);
+                                    Program.GuardarDatos();
+                                    respuesta.Exito = true;
+                                    respuesta.Mensaje = "Usuario agregado correctamente.";
+                                    break;
 
-                            case "Prestamo":
-                                var prestamo = JsonConvert.DeserializeObject<Prestamo>(mensaje.Datos);
-                                Program.datos.Prestamos.Add(prestamo);
-                                Console.WriteLine(" Préstamo registrado.");
-                                break;
+                                case "Prestamo":
+                                    var prestamo = JsonConvert.DeserializeObject<Prestamo>(mensaje.Datos);
+                                    // Registrar préstamo en backend  
+                                    Program.AgregarPrestamoGlobal(prestamo);
+                                    // Ajustar ejemplares y relaciones  
+                                    var libroP = Program.libros.First(l => l.ISBN == prestamo.LibroPrestado.ISBN);
+                                    var usuarioP = Program.usuarios.First(u => u.Identificacion == prestamo.Usuario.Identificacion);
+                                    libroP.EjemplaresDisponibles -= prestamo.CantidadLibrosPrestados;
+                                    libroP.Prestamos.Add(prestamo);
+                                    usuarioP.Prestamos.Add(prestamo);
+                                    Program.GuardarDatos();
+                                    respuesta.Exito = true;
+                                    respuesta.Mensaje = "Préstamo registrado correctamente.";
+                                    break;
 
-                            case "Backup":
-                                File.WriteAllText("backup.json", mensaje.Datos);
-                                Console.WriteLine("🗂 Backup guardado.");
-                                break;
+                                case "GetLibros":
+                                    if (mensaje.RequiereRespuesta)
+                                    {
+                                        respuesta.Exito = true;
+                                        respuesta.Mensaje = "Libros enviados correctamente.";
+                                        respuesta.Datos = JsonConvert.SerializeObject(Program.datos.Libros);
+                                    }
+                                    break;
 
-                            
-                            case "GetLibros":
-                                if (mensaje.RequiereRespuesta)
-                                {
-                                    var librosJson = JsonConvert.SerializeObject(Program.datos.Libros);
-                                    writer.Write(librosJson);
-                                }
-                                break;
+                                case "GetUsuarios":
+                                    if (mensaje.RequiereRespuesta)
+                                    {
+                                        respuesta.Exito = true;
+                                        respuesta.Mensaje = "Usuarios enviados correctamente.";
+                                        respuesta.Datos = JsonConvert.SerializeObject(Program.datos.Usuarios);
 
-                            case "GetUsuarios":
-                                if (mensaje.RequiereRespuesta)
-                                {
-                                    var usuariosJson = JsonConvert.SerializeObject(Program.datos.Usuarios);
-                                    writer.Write(usuariosJson);
-                                }
-                                break;
+                                    }
+                                    break;
 
-                            case "GetPrestamos":
-                                if (mensaje.RequiereRespuesta)
-                                {
-                                    var prestamosJson = JsonConvert.SerializeObject(Program.datos.Prestamos);
-                                    writer.Write(prestamosJson);
-                                }
-                                break;
+                                case "GetPrestamos":
+                                    if (mensaje.RequiereRespuesta)
+                                    {
+                                        respuesta.Exito = true;
+                                        respuesta.Mensaje = "Préstamos activos enviados correctamente.";
+                                        respuesta.Datos = JsonConvert.SerializeObject(
+                                            Program.datos.Prestamos.Where(p => !p.Devuelto).ToList()
+                                        );
+                                       
+                                    }
+                                    break;
 
-                            default:
-                                Console.WriteLine(" Tipo de mensaje no reconocido.");
-                                break;
+                                case "DevolverPrestamo":
+                                    var prestamoDev = JsonConvert.DeserializeObject<Prestamo>(mensaje.Datos);
+
+                                    var original = Program.datos.Prestamos.FirstOrDefault(p =>
+                                        p.Usuario.Identificacion == prestamoDev.Usuario.Identificacion &&
+                                        p.LibroPrestado.ISBN == prestamoDev.LibroPrestado.ISBN &&
+                                        !p.Devuelto);
+
+                                    if (original != null)
+                                    {
+                                        original.Devuelto = true;
+                                        original.LibroPrestado.EjemplaresDisponibles += original.CantidadLibrosPrestados;
+                                        Program.GuardarDatos();
+
+                                        respuesta.Exito = true;
+                                        respuesta.Mensaje = "Libro devuelto correctamente.";
+                                    }
+                                    else
+                                    {
+                                        respuesta.Exito = false;
+                                        respuesta.Mensaje = "No se encontró un préstamo activo para ese libro y usuario.";
+                                    }
+                                    break;
+
+                                default:
+                                    respuesta.Exito = false;
+                                    respuesta.Mensaje = $"Tipo de mensaje '{mensaje.Tipo}' no reconocido.";
+                                    break;
+
+                            }
                         }
 
-                        Program.GuardarDatos();
+                        catch (Exception ex)
+                        {
+                            respuesta.Exito = false;
+                            respuesta.Mensaje = ex.Message;
+                        }
+
+                        // Enviar siempre la respuesta  
+                        
+                            writer.Write(JsonConvert.SerializeObject(respuesta));
+                        
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(" Error: " + ex.Message);
+                    Console.WriteLine($"Error al procesar la conexión: {ex.Message}");
                 }
-        }   }
+            }
+        }
     }
 }
+                
+ 
+        
+         
+
+    

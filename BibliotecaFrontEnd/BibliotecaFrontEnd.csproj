@@ -49,6 +49,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\frmRegistrarDevolucion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\frmRegistrarDevolucion.Designer.cs">
+      <DependentUpon>frmRegistrarDevolucion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\frmSolicitarPrestamo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\frmSolicitarPrestamo.Designer.cs">
+      <DependentUpon>frmSolicitarPrestamo.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\frmGestionBackup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +112,7 @@
     <Compile Include="Mensaje.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RespuestaServidor.cs" />
     <Compile Include="Servicios\BibliotecaService.cs" />
     <EmbeddedResource Include="GUI\frmAgregarLibro.resx">
       <DependentUpon>frmAgregarLibro.cs</DependentUpon>
@@ -124,6 +137,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\frmPrincipal.resx">
       <DependentUpon>frmPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\frmRegistrarDevolucion.resx">
+      <DependentUpon>frmRegistrarDevolucion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\frmSolicitarPrestamo.resx">
+      <DependentUpon>frmSolicitarPrestamo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

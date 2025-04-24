@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BibliotecaBackEnd.Objetos;
-
+using BibliotecaFrontEnd.Servicios;
 namespace BibliotecaFrontEnd.GUI
 {
     public partial class frmListarPrestamos : Form
@@ -43,7 +43,7 @@ namespace BibliotecaFrontEnd.GUI
             cmbTipoFiltro.SelectedIndex = 0;
 
             // Cargar usuarios para el filtro
-            cmbUsuario.DataSource = Program.Datos.Usuarios
+            cmbUsuario.DataSource = BibliotecaService.ObtenerUsuarios()
                 .OrderBy(u => u.Apellido)
                 .ThenBy(u => u.Nombre)
                 .ToList();
@@ -52,7 +52,7 @@ namespace BibliotecaFrontEnd.GUI
             cmbUsuario.SelectedIndex = -1;
 
             // Cargar libros para el filtro
-            cmbLibro.DataSource = Program.Datos.Libros
+            cmbLibro.DataSource = BibliotecaService.ObtenerLibros()
                 .OrderBy(l => l.Titulo)
                 .ToList();
             cmbLibro.DisplayMember = "Titulo";
@@ -75,7 +75,7 @@ namespace BibliotecaFrontEnd.GUI
 
         private void CargarPrestamos()
         {
-            IEnumerable<Prestamo> prestamos = Program.Datos.Prestamos;
+            IEnumerable<Prestamo> prestamos = BibliotecaService.ObtenerPrestamos();
 
             switch (cmbTipoFiltro.SelectedIndex)
             {
@@ -200,6 +200,11 @@ namespace BibliotecaFrontEnd.GUI
         private void btnCerrar_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void gbFiltros_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

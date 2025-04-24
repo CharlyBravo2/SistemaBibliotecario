@@ -54,7 +54,7 @@
             this.menuConfiguracion});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(866, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(880, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -147,10 +147,10 @@
             // 
             this.lblBienvenida.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblBienvenida.AutoSize = true;
-            this.lblBienvenida.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBienvenida.Location = new System.Drawing.Point(50, 515);
+            this.lblBienvenida.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBienvenida.Location = new System.Drawing.Point(131, 608);
             this.lblBienvenida.Name = "lblBienvenida";
-            this.lblBienvenida.Size = new System.Drawing.Size(510, 37);
+            this.lblBienvenida.Size = new System.Drawing.Size(437, 31);
             this.lblBienvenida.TabIndex = 1;
             this.lblBienvenida.Text = "Sistema de Gestión Bibliotecaria";
             // 
@@ -158,7 +158,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(866, 561);
+            this.ClientSize = new System.Drawing.Size(880, 610);
             this.Controls.Add(this.lblBienvenida);
             this.Controls.Add(this.menuStrip1);
             this.IsMdiContainer = true;

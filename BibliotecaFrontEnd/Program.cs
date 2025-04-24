@@ -28,12 +28,12 @@ namespace BibliotecaFrontEnd
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GUI.frmPrincipal());
 
-            // Cargar datos al iniciar
+            // 1) Cargar los datos del JSON antes de levantar la UI
             CargarDatos();
 
-            Application.Run(new frmPrincipal());
+            // 2) Iniciar el formulario principal UNA ÚNICA vez
+            Application.Run(new GUI.frmPrincipal());
         }
         public static void CargarDatos()
         {

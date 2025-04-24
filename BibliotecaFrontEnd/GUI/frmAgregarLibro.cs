@@ -19,7 +19,7 @@ namespace BibliotecaFrontEnd.GUI
             InitializeComponent();
         }
 
-        private void btnAgregar_Click(object sender, EventArgs e)
+        private async void btnAgregar_Click(object sender, EventArgs e)
         {
             try
             {
@@ -30,7 +30,6 @@ namespace BibliotecaFrontEnd.GUI
                     return;
                 }
 
-                // Crear nuevo libro
                 Libro nuevoLibro = new Libro(
                     txtTitulo.Text,
                     new Autor(txtAutorNombre.Text, txtAutorApellido.Text, txtAutorNacionalidad.Text,
@@ -44,8 +43,17 @@ namespace BibliotecaFrontEnd.GUI
                     (int)numEjemplares.Value
                 );
 
-                // Agregar a la lista
-                BibliotecaService.EnviarGenerico(nuevoLibro, "Libro");
+                btnAgregar.Enabled = false;
+
+                RespuestaServidor respuesta = await Task.Run(() =>
+                    BibliotecaService.EnviarConRespuesta(nuevoLibro, "Libro")
+                );
+
+                if (!respuesta.Exito)
+                {
+                    MessageBox.Show($"Error: {respuesta.Mensaje}", "Error del servidor", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 MessageBox.Show("Libro agregado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Close();
@@ -53,6 +61,10 @@ namespace BibliotecaFrontEnd.GUI
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al agregar libro: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnAgregar.Enabled = true;
             }
         }
 

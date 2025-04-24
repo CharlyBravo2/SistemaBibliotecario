@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BibliotecaBackEnd.Objetos;
+using BibliotecaFrontEnd.Servicios;
 
 namespace BibliotecaFrontEnd.GUI
 {
@@ -28,21 +29,19 @@ namespace BibliotecaFrontEnd.GUI
             dtpFechaDevolucion.Value = DateTime.Today.AddDays(15);
         }
 
-        public void CargarUsuarios()
+        private void CargarUsuarios()
         {
             try
             {
-                cbUsuarios.DataSource = Program.Datos.Usuarios
-                    .Where(u => u.EsActivo)
-                    .OrderBy(u => u.Nombre)
-                    .ToList();
-                cbUsuarios.DisplayMember = "NombreCompleto";
-                cbUsuarios.ValueMember = "Identificacion";
+                var usuarios = BibliotecaService.ObtenerUsuarios(); // ✅ Esto hace la llamada al servidor
+
+                cbUsuarios.DataSource = usuarios;
+                cbUsuarios.DisplayMember = "NombreCompleto"; // Asegúrate de tener esta propiedad en la clase Usuario
+                cbUsuarios.ValueMember = "Identificacion";   // Si necesitás usarla internamente
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar usuarios: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar usuarios: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -52,10 +51,10 @@ namespace BibliotecaFrontEnd.GUI
             {
                 lvLibrosDisponibles.Items.Clear();
 
-                var librosDisponibles = Program.Datos.Libros
-                    .Where(l => l.EstaDisponible())
-                    .OrderBy(l => l.Titulo)
-                    .ToList();
+                var librosDisponibles = BibliotecaService.ObtenerLibros()
+                 .Where(l => l.EjemplaresDisponibles > 0)
+                 .OrderBy(l => l.Titulo)
+                 .ToList();
 
                 foreach (var libro in librosDisponibles)
                 {
@@ -142,10 +141,19 @@ namespace BibliotecaFrontEnd.GUI
 
                 foreach (var libro in librosSeleccionados)
                 {
-                    libro.PrestarEjemplar(usuario, diasPrestamo);
-                }
+                    var prestamo = new Prestamo
+                    {
+                        LibroPrestado = libro,
+                        Usuario = usuario,
+                        FechaPrestamo = DateTime.Today,
+                        FechaDevolucion = dtpFechaDevolucion.Value,
+                        Devuelto = false,
+                        DiasPrestamo = (dtpFechaDevolucion.Value - DateTime.Today).Days,
+                        CantidadLibrosPrestados = 1
+                    };
 
-                Program.GuardarDatos();
+                    BibliotecaService.RegistrarPrestamo(prestamo);
+                }
 
                 MessageBox.Show("Préstamo registrado correctamente.", "Éxito",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);

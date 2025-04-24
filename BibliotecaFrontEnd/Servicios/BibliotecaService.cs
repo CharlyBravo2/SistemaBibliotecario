@@ -15,64 +15,89 @@ namespace BibliotecaFrontEnd.Servicios
         private const string IP_SERVIDOR = "127.0.0.1";
         private const int PUERTO = 5000;
 
-        public static void EnviarGenerico<T>(T objeto, string tipo)
+        public static RespuestaServidor EnviarConRespuesta<T>(T objeto, string tipo)
         {
             var mensaje = new Mensaje
             {
                 Tipo = tipo,
-                Datos = JsonConvert.SerializeObject(objeto)
+                Datos = JsonConvert.SerializeObject(objeto),
+                RequiereRespuesta = true
             };
 
             string json = JsonConvert.SerializeObject(mensaje);
 
-            using (TcpClient cliente = new TcpClient(IP_SERVIDOR, PUERTO))
-            using (NetworkStream stream = cliente.GetStream())
-            using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true })
+            // Aquí la magia: usamos TcpClient y cerramos explícitamente luego
+            using (TcpClient cliente = new TcpClient())
             {
-                writer.Write(json);
+                cliente.Connect(IP_SERVIDOR, PUERTO);
+
+                using (NetworkStream stream = cliente.GetStream())
+                using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true })
+                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                {
+                    writer.Write(json);
+                    writer.Flush();
+                    cliente.Client.Shutdown(SocketShutdown.Send); // 👈 CLAVE: indica fin de escritura
+
+                    string respJson = reader.ReadToEnd(); // ahora sí puede terminar
+                    return JsonConvert.DeserializeObject<RespuestaServidor>(respJson);
+                }
             }
         }
-
-            public static List<Libro> ObtenerLibros()
+        private static RespuestaServidor EnviarYRecibir(string tipo)
+              => EnviarConRespuesta(new { }, tipo);
+        public static List<Libro> ObtenerLibros()
         {
-            string respuesta = EnviarYRecibir("GetLibros");
-            return JsonConvert.DeserializeObject<List<Libro>>(respuesta);
+            var resp = EnviarYRecibir("GetLibros");
+            if (!resp.Exito) throw new Exception(resp.Mensaje);
+            return JsonConvert.DeserializeObject<List<Libro>>(resp.Datos);
+
         }
 
         public static List<Usuario> ObtenerUsuarios()
         {
-            string respuesta = EnviarYRecibir("GetUsuarios");
-            return JsonConvert.DeserializeObject<List<Usuario>>(respuesta);
+            var resp = EnviarYRecibir("GetUsuarios");
+            if (!resp.Exito) throw new Exception(resp.Mensaje);
+            return JsonConvert.DeserializeObject<List<Usuario>>(resp.Datos);
+
         }
 
         public static List<Prestamo> ObtenerPrestamos()
         {
-            string respuesta = EnviarYRecibir("GetPrestamos");
-            return JsonConvert.DeserializeObject<List<Prestamo>>(respuesta);
+            var resp = EnviarYRecibir("GetPrestamos");
+            if (!resp.Exito) throw new Exception(resp.Mensaje);
+            return JsonConvert.DeserializeObject<List<Prestamo>>(resp.Datos);
+
         }
 
-        
-        private static string EnviarYRecibir(string tipo)
+        public static void AgregarLibro(Libro libro)
         {
-            var mensaje = new Mensaje
-            {
-                Tipo = tipo,
-                RequiereRespuesta = true,
-                Datos = "" 
-            };
-
-            string json = JsonConvert.SerializeObject(mensaje);
-
-            using (TcpClient cliente = new TcpClient(IP_SERVIDOR, PUERTO))
-            using (NetworkStream stream = cliente.GetStream())
-            using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true })
-            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                writer.Write(json);
-                string respuesta = reader.ReadToEnd();
-                return respuesta;
-            }
+            var resp = EnviarConRespuesta(libro, "Libro");
+            if (!resp.Exito) throw new Exception(resp.Mensaje);
         }
-    
+
+        public static void AgregarUsuario(Usuario usuario)
+        {
+            var resp = EnviarConRespuesta(usuario, "Usuario");
+            if (!resp.Exito) throw new Exception(resp.Mensaje);
+        }
+
+        public static void AgregarPrestamo(Prestamo prestamo)
+        {
+            var resp = EnviarConRespuesta(prestamo, "Prestamo");
+            if (!resp.Exito) throw new Exception(resp.Mensaje);
+        }
+
+        public static void RegistrarPrestamo(Prestamo p)
+        {
+            var resp = EnviarConRespuesta(p, "Prestamo");
+            if (!resp.Exito) throw new Exception(resp.Mensaje);
+        }
+
+        public static void DevolverPrestamo(Prestamo prestamo)
+        {
+            var resp = EnviarConRespuesta(prestamo, "DevolverPrestamo");
+            if (!resp.Exito) throw new Exception(resp.Mensaje);
+        }
     }
 }

@@ -46,7 +46,7 @@ namespace BibliotecaFrontEnd.GUI
 
                 Usuario nuevoUsuario = CrearUsuario();
 
-                BibliotecaService.EnviarGenerico(nuevoUsuario, "Usuario");
+                BibliotecaService.EnviarConRespuesta(nuevoUsuario, "Usuario");
 
                 MessageBox.Show("Usuario agregado correctamente.", "Éxito",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);

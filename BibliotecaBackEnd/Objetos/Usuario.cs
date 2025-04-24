@@ -99,5 +99,12 @@ namespace BibliotecaBackEnd.Objetos
         {
             return Prestamos.Where(p => !p.Devuelto).Sum(p => p.CantidadLibrosPrestados);
         }
+
+        public override string ToString()
+        {
+            return $"{Nombre} {Apellido}";
+        }
+
+        public string NombreCompleto => $"{Nombre} {Apellido}";
     }
 }

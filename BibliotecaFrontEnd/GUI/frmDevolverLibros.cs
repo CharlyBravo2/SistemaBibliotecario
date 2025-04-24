@@ -8,11 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BibliotecaBackEnd.Objetos;
+using BibliotecaFrontEnd.Servicios;
 
 namespace BibliotecaFrontEnd.GUI
 {
     public partial class frmDevolverLibros : Form
     {
+        private Usuario usuarioActual; // 🔁 Guarda el usuario seleccionado actual
         public frmDevolverLibros()
         {
             InitializeComponent();
@@ -21,28 +23,23 @@ namespace BibliotecaFrontEnd.GUI
 
         private void ConfigurarControles()
         {
-            // Configurar el autocompletado para la búsqueda de libros
-            txtBusquedaLibro.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            txtBusquedaLibro.AutoCompleteSource = AutoCompleteSource.CustomSource;
-            var librosSource = new AutoCompleteStringCollection();
-
-            Program.Datos.Libros = new List<Libro>();
-            librosSource.AddRange(Program.Datos.Libros.Select(l => l.Titulo).ToArray());
-
-            if (Program.Datos?.Libros != null)
+            try
             {
-                librosSource.AddRange(Program.Datos.Libros.Where(l => l != null).Select(l => l.Titulo).ToArray());
+                var libros = BibliotecaService.ObtenerLibros();
+                var usuarios = BibliotecaService.ObtenerUsuarios();
 
-                Program.Datos.Libros = new List<Libro>();
-                librosSource.AddRange(Program.Datos.Libros.Select(l => l.ISBN).ToArray());
+                var librosSource = new AutoCompleteStringCollection();
+                librosSource.AddRange(libros.Select(l => l.Titulo).ToArray());
+                librosSource.AddRange(libros.Select(l => l.ISBN).ToArray());
                 txtBusquedaLibro.AutoCompleteCustomSource = librosSource;
 
-                // Configurar el autocompletado para la búsqueda de usuarios
-                txtIdentificacionUsuario.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-                txtIdentificacionUsuario.AutoCompleteSource = AutoCompleteSource.CustomSource;
                 var usuariosSource = new AutoCompleteStringCollection();
-                usuariosSource.AddRange(Program.Datos.Usuarios.Select(u => u.Identificacion).ToArray());
+                usuariosSource.AddRange(usuarios.Select(u => u.Identificacion).ToArray());
                 txtIdentificacionUsuario.AutoCompleteCustomSource = usuariosSource;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar datos para autocompletado: {ex.Message}");
             }
         }
 
@@ -105,16 +102,17 @@ namespace BibliotecaFrontEnd.GUI
                     return;
                 }
 
-                var usuario = Program.Datos.Usuarios.FirstOrDefault(u =>
-                    u.Identificacion.Equals(txtIdentificacionUsuario.Text, StringComparison.OrdinalIgnoreCase));
-
+                var usuarios = BibliotecaService.ObtenerUsuarios();
+                var usuario = usuarios.FirstOrDefault(u =>
+                                    u.Identificacion.Equals(txtIdentificacionUsuario.Text, StringComparison.OrdinalIgnoreCase));
+                
                 if (usuario == null)
                 {
                     MessageBox.Show("Usuario no encontrado.", "Error",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-
+                usuarioActual = usuario; // ✅ Guardar el usuario actual
                 MostrarInformacionUsuario(usuario);
                 CargarPrestamosUsuario(usuario);
             }
@@ -143,14 +141,16 @@ namespace BibliotecaFrontEnd.GUI
 
             foreach (var prestamo in prestamosActivos)
             {
-                dgvPrestamos.Rows.Add(
-                    prestamo.LibroPrestado?.Titulo,
-                    prestamo.LibroPrestado?.ISBN,
-                    prestamo.FechaPrestamo.ToShortDateString(),
-                    prestamo.FechaDevolucion.ToShortDateString(),
-                    prestamo.EstaVencido() ? "Vencido" : "Activo",
-                    prestamo.CantidadLibrosPrestados
-                );
+                int rowIndex = dgvPrestamos.Rows.Add(
+                prestamo.LibroPrestado?.Titulo,
+                prestamo.LibroPrestado?.ISBN,
+                prestamo.FechaPrestamo.ToShortDateString(),
+                prestamo.FechaDevolucion.ToShortDateString(),
+                prestamo.EstaVencido() ? "Vencido" : "Activo",
+                prestamo.CantidadLibrosPrestados
+            );
+
+                dgvPrestamos.Rows[rowIndex].Tag = prestamo; // ✅ ASIGNACIÓN IMPORTANTE
             }
 
             lblTotalPrestamos.Text = $"Total préstamos activos: {prestamosActivos.Count()}";
@@ -158,73 +158,23 @@ namespace BibliotecaFrontEnd.GUI
 
         private void btnDevolver_Click(object sender, EventArgs e)
         {
+            if (dgvPrestamos.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Seleccione un préstamo para devolver.");
+                return;
+            }
+
+            var prestamo = (Prestamo)dgvPrestamos.SelectedRows[0].Tag;
+
             try
             {
-                if (string.IsNullOrWhiteSpace(txtBusquedaLibro.Text))
-                {
-                    MessageBox.Show("Debe buscar un libro primero.", "Validación",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtBusquedaLibro.Focus();
-                    return;
-                }
-
-                if (string.IsNullOrWhiteSpace(txtIdentificacionUsuario.Text))
-                {
-                    MessageBox.Show("Debe buscar un usuario primero.", "Validación",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtIdentificacionUsuario.Focus();
-                    return;
-                }
-
-                var libro = Program.Datos.Libros.FirstOrDefault(l =>
-                    l.Titulo.Equals(txtBusquedaLibro.Text, StringComparison.OrdinalIgnoreCase) ||
-                    l.ISBN.Equals(txtBusquedaLibro.Text, StringComparison.OrdinalIgnoreCase));
-
-                var usuario = Program.Datos.Usuarios.FirstOrDefault(u =>
-                    u.Identificacion.Equals(txtIdentificacionUsuario.Text, StringComparison.OrdinalIgnoreCase));
-
-                if (libro == null || usuario == null)
-                {
-                    MessageBox.Show("Libro o usuario no encontrado.", "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // Verificar si el usuario tiene este libro prestado
-                var prestamo = usuario.Prestamos.FirstOrDefault(p =>
-                    p.LibroPrestado == libro && !p.Devuelto);
-
-                if (prestamo == null)
-                {
-                    MessageBox.Show("Este usuario no tiene prestado este libro.", "Validación",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                // Confirmar la devolución
-                var confirmacion = MessageBox.Show(
-                    $"¿Confirmar devolución del libro '{libro.Titulo}' por {usuario.Nombre} {usuario.Apellido}?",
-                    "Confirmar Devolución",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question);
-
-                if (confirmacion == DialogResult.Yes)
-                {
-                    usuario.DevolverLibro(libro);
-                    Program.GuardarDatos();
-
-                    MessageBox.Show("Libro devuelto correctamente.", "Éxito",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Actualizar la información mostrada
-                    MostrarInformacionLibro(libro);
-                    CargarPrestamosUsuario(usuario);
-                }
+                BibliotecaService.DevolverPrestamo(prestamo);
+                MessageBox.Show("Libro devuelto correctamente.");
+                CargarPrestamosUsuario(usuarioActual); // ✅ Esto sí funcion
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al devolver libro: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al devolver libro: {ex.Message}");
             }
         }
 
@@ -238,7 +188,8 @@ namespace BibliotecaFrontEnd.GUI
             if (dgvPrestamos.SelectedRows.Count > 0)
             {
                 string isbn = dgvPrestamos.SelectedRows[0].Cells["ISBN"].Value.ToString();
-                var libro = Program.Datos.Libros.FirstOrDefault(l => l.ISBN == isbn);
+                var libros = BibliotecaService.ObtenerLibros();
+                var libro = libros.FirstOrDefault(l => l.ISBN == isbn);
 
                 if (libro != null)
                 {

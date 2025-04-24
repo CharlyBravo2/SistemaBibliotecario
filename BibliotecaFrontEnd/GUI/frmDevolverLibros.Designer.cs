@@ -516,7 +516,6 @@ namespace BibliotecaFrontEnd.GUI
             this.Name = "frmDevolverLibros";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Devolver Libro";
-            this.Load += new System.EventHandler(this.frmDevolverLibro_Load);
             this.gbLibro.ResumeLayout(false);
             this.gbLibro.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picEstado)).EndInit();
@@ -529,10 +528,7 @@ namespace BibliotecaFrontEnd.GUI
 
         }
 
-        private void frmDevolverLibro_Load(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         #endregion
 

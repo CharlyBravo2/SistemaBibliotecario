@@ -31,13 +31,8 @@ namespace BibliotecaFrontEnd.GUI
             {
                 lvLibros.Items.Clear();
 
-                if (Program.Datos == null || Program.Datos.Libros == null)
-                {
-                    MessageBox.Show("Datos or Libros is not initialized.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                var libros = Program.Datos.Libros
+                // 🔄 Obtener libros directamente del servidor
+                var libros = BibliotecaService.ObtenerLibros()
                     .OrderBy(l => l.Titulo)
                     .ToList();
 
@@ -55,7 +50,6 @@ namespace BibliotecaFrontEnd.GUI
                     }
 
                     item.Tag = libro;
-
                     lvLibros.Items.Add(item);
                 }
 
@@ -63,8 +57,7 @@ namespace BibliotecaFrontEnd.GUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar los libros: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar los libros: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

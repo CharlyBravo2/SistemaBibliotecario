@@ -320,7 +320,6 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmPrestarLibros";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Registrar Préstamo de Libros";
             this.Load += new System.EventHandler(this.frmPrestarLibros_Load);
             this.gbUsuario.ResumeLayout(false);
