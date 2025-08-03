@@ -14,7 +14,7 @@ namespace BibliotecaFrontEnd.GUI
 {
     public partial class frmDevolverLibros : Form
     {
-        private Usuario usuarioActual; // 🔁 Guarda el usuario seleccionado actual
+        private Usuario usuarioActual; 
         public frmDevolverLibros()
         {
             InitializeComponent();
@@ -84,7 +84,7 @@ namespace BibliotecaFrontEnd.GUI
             txtDisponibilidad.Text = libro.EstaDisponible() ? "Disponible" : "No disponible";
             txtEjemplares.Text = $"{libro.EjemplaresDisponibles}/{libro.CantidadEjemplares}";
 
-            // Mostrar imagen según disponibilidad
+            
             picEstado.Image = libro.EstaDisponible() ?
                 Properties.Resources.disponible :
                 Properties.Resources.no_disponible;

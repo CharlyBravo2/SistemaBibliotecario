@@ -26,7 +26,7 @@ namespace BibliotecaFrontEnd.GUI
 
         private void CargarFiltros()
         {
-            // Cargar tipos de filtro
+            
             cmbTipoFiltro.Items.AddRange(new string[] {
                 "Todos",
                 "Activos",
@@ -36,7 +36,7 @@ namespace BibliotecaFrontEnd.GUI
             });
             cmbTipoFiltro.SelectedIndex = 0;
 
-            // Cargar usuarios para el filtro
+            
             cmbUsuario.DataSource = BibliotecaService.ObtenerUsuarios()
                 .OrderBy(u => u.Apellido)
                 .ThenBy(u => u.Nombre)
@@ -45,7 +45,7 @@ namespace BibliotecaFrontEnd.GUI
             cmbUsuario.ValueMember = "Identificacion";
             cmbUsuario.SelectedIndex = -1;
 
-            // Cargar libros para el filtro
+            
             cmbLibro.DataSource = BibliotecaService.ObtenerLibros()
                 .OrderBy(l => l.Titulo)
                 .ToList();
@@ -73,16 +73,16 @@ namespace BibliotecaFrontEnd.GUI
             {
                 var prestamos = await Task.Run(() => BibliotecaService.ObtenerPrestamos());
 
-                // Aplicar filtros
+                
                 switch (cmbTipoFiltro.SelectedIndex)
                 {
-                    case 1: // Activos
+                    case 1: 
                         prestamos = prestamos.Where(p => !p.Devuelto).ToList();
                         break;
-                    case 2: // Vencidos
+                    case 2: 
                         prestamos = prestamos.Where(p => p.EstaVencido() && !p.Devuelto).ToList();
                         break;
-                    case 3: // Por Usuario
+                    case 3: 
                         if (cmbUsuario.SelectedValue == null)
                         {
                             MessageBox.Show("Seleccione un usuario para filtrar.", "Validación",
@@ -91,7 +91,7 @@ namespace BibliotecaFrontEnd.GUI
                         }
                         prestamos = prestamos.Where(p => p.Usuario.Identificacion == cmbUsuario.SelectedValue.ToString()).ToList();
                         break;
-                    case 4: // Por Libro
+                    case 4: 
                         if (cmbLibro.SelectedValue == null)
                         {
                             MessageBox.Show("Seleccione un libro para filtrar.", "Validación",
@@ -102,7 +102,7 @@ namespace BibliotecaFrontEnd.GUI
                         break;
                 }
 
-                // Filtrar por fechas
+                
                 if (dtpDesde.Checked && dtpHasta.Checked)
                 {
                     prestamos = prestamos.Where(p =>
@@ -129,7 +129,7 @@ namespace BibliotecaFrontEnd.GUI
 
         private void cmbTipoFiltro_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Mostrar/ocultar controles según el tipo de filtro seleccionado
+            
             pnlUsuario.Visible = cmbTipoFiltro.SelectedIndex == 3;
             pnlLibro.Visible = cmbTipoFiltro.SelectedIndex == 4;
         }
@@ -163,10 +163,10 @@ namespace BibliotecaFrontEnd.GUI
         {
             using (System.IO.StreamWriter sw = new System.IO.StreamWriter(filePath))
             {
-                // Escribir encabezados
+                
                 sw.WriteLine("Título Libro,ISBN,Autor,Usuario,Identificación Usuario,Fecha Préstamo,Fecha Devolución,Días Préstamo,Estado,Cantidad");
 
-                // Escribir datos
+                
                 foreach (DataGridViewRow row in dgvPrestamos.Rows)
                 {
                     if (row.DataBoundItem is Prestamo prestamo)
@@ -204,7 +204,7 @@ namespace BibliotecaFrontEnd.GUI
 
         private void ConfigurarDataGridView()
         {
-            dgvPrestamos.Columns.Clear(); // Limpia si ya hay columnas
+            dgvPrestamos.Columns.Clear(); 
 
             dgvPrestamos.Columns.Add(new DataGridViewTextBoxColumn
             {
